@@ -26,11 +26,11 @@ def get_auth_params():
 
 AT = строчка токена
 #session = vk.Session()
-#session = vk.AuthSession(app_id='ид приложения', user_login='логин', user_password='пароль') #раскомментировать для получения токена
+#session = vk.AuthSession(app_id='ид приложения', user_login='логин', user_password='пароль') #разкомментировать для получения токена
 session = vk.Session(access_token = AT)
 api = vk.API(session)
-#get_auth_params() #раскомментировать для получния токена
-#exit(0) #раскомментировать для получния токена
+#get_auth_params() #разкомментировать для получния токена
+#exit(0) #разкомментировать для получния токена
 capcha_sleep = 1
 captcha_key = -1
 false_key = False
