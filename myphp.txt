@@ -1,0 +1,39 @@
+<?php
+$access_token="0";
+// https://oauth.vk.com/authorize?client_id=5972438&response_type=token&v=5.65&scope=messages,groups
+$myCurl=curl_init();
+curl_setopt_array($myCurl,[
+	CURLOPT_POST=>true,
+	CURLOPT_RETURNTRANSFER=>true,
+	CURLOPT_URL=>"https://api.vk.com/method/board.getComments",
+]);
+$group_id=30666517;
+$topic_id=25736069;
+$offset=0;
+curl_setopt($myCurl,CURLOPT_POSTFIELDS,"v=5.65&access_token=$access_token&group_id=$group_id&topic_id=$topic_id&offset=$offset&count=1");
+$response=curl_exec($myCurl);
+$arr=json_decode($response,true);
+$offset=$arr["response"]["count"]-1;
+$logger=0;
+while(true){
+	curl_setopt($myCurl,CURLOPT_POSTFIELDS,"v=5.65&access_token=$access_token&group_id=$group_id&topic_id=$topic_id&offset=$offset&count=1");
+	curl_setopt($myCurl,CURLOPT_URL,"https://api.vk.com/method/board.getComments");
+	$response=curl_exec($myCurl);
+	$arr=json_decode($response,true);
+	$offset=$arr["response"]["count"]-1;
+	$id=$arr["response"]["items"][0]["from_id"];
+	usleep(333333);
+	echo "$logger\n";
+	$logger++;
+	if($id!=29629954){
+			curl_setopt($myCurl,CURLOPT_URL,"https://api.vk.com/method/board.createComment");
+			$message=dechex($offset+1);
+			$message="0x0$message";
+			curl_setopt($myCurl,CURLOPT_POSTFIELDS,"v=5.65&access_token=$access_token&group_id=$group_id&topic_id=$topic_id&message=$message");
+			$response=curl_exec($myCurl);
+			$offset++;
+			usleep(333333);
+	}
+}
+curl_close($myCurl);
+?>
